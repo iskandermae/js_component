@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script type="module">
+      import { LitElement, html } from 'https://unpkg.com/lit-element?module';
+
+      const template = html` <h1>Hello world</h1> `;
+      const footerTemplate = html`
+        <footer>Made with love by <a href="https://open-wc.org/">open-wc</a></footer>
+      `;
+      class TodoApp extends LitElement {
+        constructor() {
+          super();
+          this.todos = [
+            { text: 'Do A', finished: true },
+            { text: 'Do B', finished: false },
+            { text: 'Do C', finished: false },
+          ];
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          console.log('lit element connected');
+        }
+        _addTodo() {
+          const input = this.shadowRoot.getElementById('addTodoInput');
+          const text = input.value;
+          input.value = '';
+
+          this.todos.push({ text, finished: false });
+          this.requestUpdate();
+        }
+        render() {
+          return html` <h1>Todo app</h1>
+          <input id="addTodoInput" placeholder="Name" />
+          <button @click="${this._addTodo}">Add</button>
+          <ol>
+          ${this.todos.map(todo => html`<li>${todo.text}  (${todo.finished ? 'Finished' : 'Unfinished'})</li>`,)}
+          </ol>
+          ${footerTemplate}`;
+        }
+      }
+      customElements.define('todo-app', TodoApp);
+    </script>
+    <todo-app></todo-app>
+  </body>
+</html>
